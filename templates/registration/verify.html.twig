@@ -1,0 +1,5 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+Please Verify your Email. If you dont have the link anymore click <a href="{{ path('registration_new', {'id': user_id}) }}">here</a> to generate a new one.
+{% endblock body %}
