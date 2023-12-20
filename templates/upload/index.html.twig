@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello UploadController!{% endblock %}
+
+{% block body %}
+
+    <form method="post" enctype="multipart/form-data">
+        <input name="upload" type="file">
+        <input type="submit" value="Upload">
+    </form>
+
+{% endblock %}
