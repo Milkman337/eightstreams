@@ -39,6 +39,9 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
          - { path: /home, roles: ROLE_VERIFIED }
+         - { path: /video, roles: ROLE_VERIFIED }
+         - { path: /videos, roles: ROLE_VERIFIED }
+         - { path: /upload, roles: ROLE_ADMIN}
         # - { path: ^/profile, roles: ROLE_USER }
 
 when@test:

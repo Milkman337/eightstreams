@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Video;
+use App\Repository\VideoRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,7 +16,7 @@ use Symfony\Component\Security\Http\Attribute\CurrentUser;
 class UploadController extends AbstractController
 {
     public function __construct(
-        private readonly 
+        private readonly EntityManagerInterface $entityManager
     )
     {
     }
@@ -25,10 +28,20 @@ class UploadController extends AbstractController
         /** @var UploadedFile $uploadedFile */
         $uploadedFile = $request->files->get('upload');
 
-        $destination = $this->getParameter('kernel.project_dir').'/uploads/'.$user->getId().'/videos';
+        if ($uploadedFile?->getMimeType() == 'video/mp4') {
+            $destination = $this->getParameter('kernel.project_dir').'/uploads/'.$user->getId().'/videos';
 
-        $filename = uniqid() . sha1(time());
-        $uploadedFile->move($destination, $filename);
+            $filename = uniqid() . sha1(time());
+            $uploadedFile->move($destination, $filename);
+
+            $video = new Video();
+            $video
+                ->setOwner($user)
+                ->setFilename($filename);
+
+            $this->entityManager->persist($video);
+            $this->entityManager->flush();
+        }
 
         return $this->render('upload/index.html.twig', [
             'controller_name' => 'UploadController',

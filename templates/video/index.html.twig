@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello VideoController!{% endblock %}
+
+{% block body %}
+    {% include '_header.html.twig' %}
+    <div class="container">
+
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            {% for video in videos %}
+                <div class="col">
+                    <div class="card shadow-sm">
+                        <video src="{{ path('app_serve_video', {'id':video.id}) }}" class="card-img-top"></video>
+                        <div class="card-body">
+                            <p class="card-text">{{ video.filename }}</p>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="btn-group">
+                                    <a href="{{ path('app_video_details', {'id':video.id}) }}">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary">View</button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <hr>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                {% for i in range(1, num_pages) %}
+                    {% if i == page %}
+                        <li class="page-item disabled"><a class="page-link" href="#">{{ i }}</a></li>
+                    {% else %}
+                        <li class="page-item"><a class="page-link" href="{{ path('app_video', {'page': i }) }}">{{ i }}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+            </ul>
+        </nav>
+    </div>
+
+
+{% endblock %}

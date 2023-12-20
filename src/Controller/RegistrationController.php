@@ -33,9 +33,7 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserAuthenticatorInterface $userAuthenticator, AppAuthenticator $authenticator): Response
     {
-        if (!$this->getUser()?->isVerified()) {
-            return $this->redirectToRoute('registration_verify');
-        } elseif ($this->getUser()) {
+        if ($this->getUser()) {
             return $this->redirectToRoute('app_home');
         }
 

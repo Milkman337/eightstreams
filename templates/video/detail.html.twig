@@ -1,0 +1,19 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% include '_header.html.twig' %}
+    <div id="container">
+        <video id="player" playsinline controls>
+            <source src="{{ path('app_serve_video', {'id':video.id}) }}" type="video/mp4"/>
+        </video>
+    </div>
+
+    <script>
+        const player = new Plyr('video');
+
+        // Expose player so it can be used from the console
+        window.player = player;
+    </script>
+
+
+{% endblock body %}
