@@ -10,10 +10,11 @@
             {% for video in videos %}
                 <div class="col">
                     <div class="card shadow-sm">
-                        <video src="{{ path('app_serve_video', {'id':video.id}) }}" class="card-img-top"></video>
+                        <video height="140" src="{{ path('app_serve_video', {'id':video.id}) }}" class="card-img-top"></video>
                         <div class="card-body">
-                            <p class="card-text">{{ video.filename }}</p>
+                            <p class="card-text">{{ video.title }}</p>
                             <div class="d-flex justify-content-between align-items-center">
+                                <small>Views: {{ video.views }}</small>
                                 <div class="btn-group">
                                     <a href="{{ path('app_video_details', {'id':video.id}) }}">
                                         <button type="button" class="btn btn-sm btn-outline-secondary">View</button>

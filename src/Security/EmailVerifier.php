@@ -79,7 +79,7 @@ class EmailVerifier
     public function addVerifiedRole(UserInterface|User $user): void
     {
         $userRoles = $user->getRoles();
-        $userRoles[] = 'VERIFIED';
+        $userRoles[] = 'ROLE_VERIFIED';
         $user->setRoles($userRoles);
     }
 }

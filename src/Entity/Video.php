@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VideoRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: VideoRepository::class)]
@@ -19,6 +21,20 @@ class Video
     #[ORM\ManyToOne(inversedBy: 'videos')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $owner = null;
+
+    #[ORM\OneToMany(mappedBy: 'video', targetEntity: VideoWatch::class, orphanRemoval: true)]
+    private Collection $videoWatches;
+
+    #[ORM\Column]
+    private ?int $views = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $title = null;
+
+    public function __construct()
+    {
+        $this->videoWatches = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -45,6 +61,65 @@ class Video
     public function setOwner(?User $owner): static
     {
         $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VideoWatch>
+     */
+    public function getVideoWatches(): Collection
+    {
+        return $this->videoWatches;
+    }
+
+    public function addVideoWatch(VideoWatch $videoWatch): static
+    {
+        if (!$this->videoWatches->contains($videoWatch)) {
+            $this->videoWatches->add($videoWatch);
+            $videoWatch->setVideo($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoWatch(VideoWatch $videoWatch): static
+    {
+        if ($this->videoWatches->removeElement($videoWatch)) {
+            // set the owning side to null (unless already changed)
+            if ($videoWatch->getVideo() === $this) {
+                $videoWatch->setVideo(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+
+    public function setViews(int $views): static
+    {
+        $this->views = $views;
+
+        return $this;
+    }
+
+    public function addView()
+    {
+        $this->views += 1;
+    }
+
+    public function getTitle(): ?string
+    {
+        return $this->title;
+    }
+
+    public function setTitle(string $title): static
+    {
+        $this->title = $title;
 
         return $this;
     }

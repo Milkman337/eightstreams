@@ -37,9 +37,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(mappedBy: 'owner', targetEntity: Video::class, orphanRemoval: true)]
     private Collection $videos;
 
+    #[ORM\OneToMany(mappedBy: 'user', targetEntity: VideoWatch::class, orphanRemoval: true)]
+    private Collection $videoWatches;
+
     public function __construct()
     {
         $this->videos = new ArrayCollection();
+        $this->videoWatches = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -148,6 +152,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($video->getOwner() === $this) {
                 $video->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, VideoWatch>
+     */
+    public function getVideoWatches(): Collection
+    {
+        return $this->videoWatches;
+    }
+
+    public function addVideoWatch(VideoWatch $videoWatch): static
+    {
+        if (!$this->videoWatches->contains($videoWatch)) {
+            $this->videoWatches->add($videoWatch);
+            $videoWatch->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeVideoWatch(VideoWatch $videoWatch): static
+    {
+        if ($this->videoWatches->removeElement($videoWatch)) {
+            // set the owning side to null (unless already changed)
+            if ($videoWatch->getUser() === $this) {
+                $videoWatch->setUser(null);
             }
         }
 

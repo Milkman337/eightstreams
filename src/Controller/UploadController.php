@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Entity\Video;
-use App\Repository\VideoRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
@@ -29,7 +28,7 @@ class UploadController extends AbstractController
         $uploadedFile = $request->files->get('upload');
 
         if ($uploadedFile?->getMimeType() == 'video/mp4') {
-            $destination = $this->getParameter('kernel.project_dir').'/uploads/'.$user->getId().'/videos';
+            $destination = $this->getParameter('kernel.project_dir') . '/uploads/' . $user->getId() . '/videos';
 
             $filename = uniqid() . sha1(time());
             $uploadedFile->move($destination, $filename);
@@ -37,7 +36,9 @@ class UploadController extends AbstractController
             $video = new Video();
             $video
                 ->setOwner($user)
-                ->setFilename($filename);
+                ->setFilename($filename)
+                ->setTitle($request->request->get('title'))
+                ->setViews(0);
 
             $this->entityManager->persist($video);
             $this->entityManager->flush();
